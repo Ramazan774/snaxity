@@ -14,14 +14,24 @@ export function MainNav ({
     
     const routes = [
         {
-            href: `/${params.storeid}`,
+            href: `/${params.storeId}`,
             label: 'Overview',
-            active: pathname === `/${params.storeid}`
+            active: pathname === `/${params.storeId}`
         },
         {
-            href: `/${params.storeid}/settings`,
+            href: `/${params.storeId}/billboards`,
+            label: 'Billboards',
+            active: pathname === `/${params.storeId}/billboards`
+        },
+        {
+            href: `/${params.storeId}/categories`,
+            label: 'Categories',
+            active: pathname === `/${params.storeId}/categories`
+        },
+        {
+            href: `/${params.storeId}/settings`,
             label: 'Settings',
-            active: pathname === `/${params.storeid}/settings`
+            active: pathname === `/${params.storeId}/settings`
         }
     ];
 
