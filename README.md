@@ -1,5 +1,7 @@
 🛒 Snaxity
+
 A modern, full-featured e-commerce store built with Next.js. Shop for products, manage your cart, and complete secure checkout with Stripe integration.
+
 ✨ Features
 
 Product Catalog: Browse through a selection of products
@@ -12,6 +14,7 @@ Image Optimization: Fast-loading product images with Cloudinary
 Responsive Design: Beautiful UI that works on all devices
 
 🛠️ Tech Stack
+
 Frontend & Backend
 
 Next.js 14 - React framework with App Router
