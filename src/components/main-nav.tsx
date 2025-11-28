@@ -5,53 +5,59 @@ import { useParams, usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 
-export function MainNav ({
+interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
+    storeId?: string;
+}
+
+export function MainNav({
     className,
+    storeId,
     ...props
-}: React.HTMLAttributes<HTMLElement>) {
+}: MainNavProps) {
     const pathname = usePathname();
     const params = useParams();
-    
+    const id = storeId || params.storeId;
+
     const routes = [
         {
-            href: `/${params.storeId}`,
+            href: `/${id}`,
             label: 'Overview',
-            active: pathname === `/${params.storeId}`
+            active: pathname === `/${id}`
         },
         {
-            href: `/${params.storeId}/billboards`,
+            href: `/${id}/billboards`,
             label: 'Billboards',
-            active: pathname === `/${params.storeId}/billboards`
+            active: pathname === `/${id}/billboards`
         },
         {
-            href: `/${params.storeId}/categories`,
+            href: `/${id}/categories`,
             label: 'Categories',
-            active: pathname === `/${params.storeId}/categories`
+            active: pathname === `/${id}/categories`
         },
         {
-            href: `/${params.storeId}/sizes`,
+            href: `/${id}/sizes`,
             label: 'Sizes',
-            active: pathname === `/${params.storeId}/sizes`
+            active: pathname === `/${id}/sizes`
         },
         {
-            href: `/${params.storeId}/colors`,
+            href: `/${id}/colors`,
             label: 'Colors',
-            active: pathname === `/${params.storeId}/colors`
+            active: pathname === `/${id}/colors`
         },
         {
-            href: `/${params.storeId}/products`,
+            href: `/${id}/products`,
             label: 'Products',
-            active: pathname === `/${params.storeId}/products`
+            active: pathname === `/${id}/products`
         },
         {
-            href: `/${params.storeId}/orders`,
+            href: `/${id}/orders`,
             label: 'Orders',
-            active: pathname === `/${params.storeId}/orders`
+            active: pathname === `/${id}/orders`
         },
         {
-            href: `/${params.storeId}/settings`,
+            href: `/${id}/settings`,
             label: 'Settings',
-            active: pathname === `/${params.storeId}/settings`
+            active: pathname === `/${id}/settings`
         }
     ];
 

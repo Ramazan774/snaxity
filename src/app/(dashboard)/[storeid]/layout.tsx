@@ -13,7 +13,7 @@ export default async function DashboardLayout({
 }) {
     const { userId } = auth();
 
-    if(!userId) {
+    if (!userId) {
         redirect('/sign-in');
     }
 
@@ -24,13 +24,13 @@ export default async function DashboardLayout({
         }
     });
 
-    if(!store) {
+    if (!store) {
         redirect('/');
     }
 
     return (
         <>
-            <Navbar />
+            <Navbar storeId={params.storeId} />
             {children}
         </>
     )

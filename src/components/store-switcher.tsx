@@ -9,13 +9,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useStoreModal } from "@/hooks/use-store-modal";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { 
-    Command, 
-    CommandEmpty, 
-    CommandGroup, 
-    CommandInput, 
-    CommandItem, 
-    CommandList, 
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
     CommandSeparator
 } from "@/components/ui/command";
 
@@ -23,14 +23,17 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
 interface StoreSwitcherProps extends PopoverTriggerProps {
     items: Store[];
+    storeId?: string;
 };
 
 export default function StoreSwitcher({
     className,
-    items = []
+    items = [],
+    storeId
 }: StoreSwitcherProps) {
     const storeModal = useStoreModal();
     const params = useParams();
+    const id = storeId || params.storeId;
     const router = useRouter();
 
     const formattedItems = items.map((item) => ({
@@ -38,7 +41,7 @@ export default function StoreSwitcher({
         value: item.id
     }));
 
-    const currentStore  = formattedItems.find((item) => item.value === params.storeId);
+    const currentStore = formattedItems.find((item) => item.value === id);
 
     const [open, setOpen] = useState(false);
 
@@ -59,7 +62,7 @@ export default function StoreSwitcher({
                     className={cn("w-[200px] justify-between", className)}
                 >
                     <StoreIcon className="mr-2 h-4 w-4" />
-                    {currentStore?.label  || "Select a store"}
+                    {currentStore?.label || "Select a store"}
                     <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
