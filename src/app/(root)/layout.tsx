@@ -10,7 +10,7 @@ export default async function SetupLayout({
 }) {
     const { userId } = auth();
 
-    if(!userId) {
+    if (!userId) {
         redirect('/sign-in');
     }
 
@@ -21,7 +21,8 @@ export default async function SetupLayout({
         }
     });
 
-    if(store) {
+    if (store) {
+        console.log("Root Layout Redirecting to:", store.id);
         redirect(`/${store.id}`)
     }
 

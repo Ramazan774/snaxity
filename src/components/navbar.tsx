@@ -14,6 +14,7 @@ interface NavbarProps {
 const Navbar = async ({
   storeId
 }: NavbarProps) => {
+  console.log("Navbar storeId:", storeId);
   const { userId } = auth();
 
   if (!userId) {

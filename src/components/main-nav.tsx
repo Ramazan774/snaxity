@@ -18,6 +18,10 @@ export function MainNav({
     const params = useParams();
     const id = storeId || params.storeId;
 
+    console.log("MainNav storeId prop:", storeId);
+    console.log("MainNav params:", params);
+    console.log("MainNav resolved id:", id);
+
     const routes = [
         {
             href: `/${id}`,
