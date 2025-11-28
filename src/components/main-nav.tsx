@@ -16,7 +16,9 @@ export function MainNav({
 }: MainNavProps) {
     const pathname = usePathname();
     const params = useParams();
-    const id = storeId || params.storeId;
+    // Fallback: try to get ID from pathname if params fail (e.g. /storeId/routes)
+    const pathId = pathname?.split('/')[1];
+    const id = storeId || params.storeId || pathId;
 
     console.log("MainNav storeId prop:", storeId);
     console.log("MainNav params:", params);

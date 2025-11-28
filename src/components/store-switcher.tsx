@@ -3,7 +3,7 @@
 import { Check, ChevronsUpDown, PlusCircle, Store as StoreIcon } from "lucide-react";
 import { useState } from "react";
 import { Store } from "@prisma/client";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, usePathname } from "next/navigation";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useStoreModal } from "@/hooks/use-store-modal";
@@ -33,7 +33,10 @@ export default function StoreSwitcher({
 }: StoreSwitcherProps) {
     const storeModal = useStoreModal();
     const params = useParams();
-    const id = storeId || params.storeId;
+    const pathname = usePathname();
+    // Fallback: try to get ID from pathname if params fail
+    const pathId = pathname?.split('/')[1];
+    const id = storeId || params.storeId || pathId;
     const router = useRouter();
 
     const formattedItems = items.map((item) => ({
