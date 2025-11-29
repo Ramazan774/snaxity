@@ -8,23 +8,23 @@ import { Trash } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, usePathname } from "next/navigation";
 
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { 
-    Form, 
-    FormControl, 
-    FormField, 
-    FormItem, 
-    FormLabel, 
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
     FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AlertModal } from "@/components/modals/alert-modal";
 import ImageUpload from "@/components/ui/image-upload";
-    
+
 const formSchema = z.object({
     label: z.string().min(1),
     imageUrl: z.string().min(1)
@@ -42,6 +42,9 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
 }) => {
     const params = useParams();
     const router = useRouter();
+    const pathname = usePathname();
+    const pathId = pathname?.split('/')[1];
+    const storeId = params.storeId || pathId;
 
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -64,15 +67,15 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
         try {
             setLoading(true);
             if (initialData) {
-                await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data);
+                await axios.patch(`/api/${storeId}/billboards/${params.billboardId}`, data);
             } else {
-                await axios.post(`/api/${params.storeId}/billboards`, data);
+                await axios.post(`/api/${storeId}/billboards`, data);
             }
-            
-            router.push(`/${params.storeId}/billboards`)
+
+            router.push(`/${storeId}/billboards`)
             router.refresh();
             toast.success(toastMessage);
-        } catch(error) {
+        } catch (error) {
             toast.error("Something went wrong")
         } finally {
             setLoading(false);
@@ -82,11 +85,11 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`)
-            router.push(`/${params.storeId}/billboards`);
+            await axios.delete(`/api/${storeId}/billboards/${params.billboardId}`)
+            router.push(`/${storeId}/billboards`);
             router.refresh();
             toast.success("Billboard deleted.")
-        } catch(error) {
+        } catch (error) {
             toast.error("Make sure you removed all categories using this billboard first.")
         } finally {
             setLoading(false)
@@ -95,15 +98,15 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
     }
 
     return (
-        <>  
-            <AlertModal 
+        <>
+            <AlertModal
                 isOpen={open}
                 onClose={() => setOpen(false)}
                 onConfirm={onDelete}
                 loading={loading}
             />
             <div className="flex items-center justify-between">
-                <Heading 
+                <Heading
                     title={title}
                     description={description}
                 />
@@ -114,7 +117,7 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
                         size="sm"
                         onClick={() => setOpen(true)}
                     >
-                        <Trash className="h-4 w-4"/>
+                        <Trash className="h-4 w-4" />
                     </Button>
                 )}
             </div>
@@ -128,7 +131,7 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
                             <FormItem>
                                 <FormLabel>Background Image</FormLabel>
                                 <FormControl>
-                                    <ImageUpload 
+                                    <ImageUpload
                                         value={field.value ? [field.value] : []}
                                         disabled={loading}
                                         onChange={(url) => field.onChange(url)}
@@ -147,7 +150,7 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
                                 <FormItem>
                                     <FormLabel>Label</FormLabel>
                                     <FormControl>
-                                        <Input disabled={loading} placeholder="Billboard label" {...field}/>
+                                        <Input disabled={loading} placeholder="Billboard label" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
