@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams, usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
@@ -18,7 +18,11 @@ interface CategoryClientProps {
 
 export const CategoryClient: React.FC<CategoryClientProps> = ({ storeId, data }) => {
     const router = useRouter();
-    
+    const params = useParams();
+    const pathname = usePathname();
+    const pathId = pathname?.split('/')[1];
+    const id = storeId || params.storeId || pathId;
+
     return (
         <>
             <div className="flex items-center justify-between">
@@ -26,7 +30,7 @@ export const CategoryClient: React.FC<CategoryClientProps> = ({ storeId, data })
                     title={`Categories (${data.length})`}
                     description="Manage categories for your store"
                 />
-                <Button onClick={() => router.push(`/${storeId}/categories/new`)}>
+                <Button onClick={() => router.push(`/${id}/categories/new`)}>
                     <Plus className="mr-2 h-4 w-4" />
                     Add new
                 </Button>
@@ -38,7 +42,7 @@ export const CategoryClient: React.FC<CategoryClientProps> = ({ storeId, data })
                 description="API calls for Categories"
             />
             <Separator />
-            <ApiList entityName="categories" entityIdName="categoryId"/>
+            <ApiList entityName="categories" entityIdName="categoryId" />
         </>
     );
 };

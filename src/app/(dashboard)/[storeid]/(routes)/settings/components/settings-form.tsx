@@ -8,24 +8,24 @@ import { Trash } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, usePathname } from "next/navigation";
 
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { 
-    Form, 
-    FormControl, 
-    FormField, 
-    FormItem, 
-    FormLabel, 
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
     FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { ApiAlert } from "@/components/ui/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
-    
+
 interface SettingsFormProps {
     initialData: Store
 }
@@ -41,6 +41,9 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
 }) => {
     const params = useParams();
     const router = useRouter();
+    const pathname = usePathname();
+    const pathId = pathname?.split('/')[1];
+    const storeId = params.storeId || pathId;
     const origin = useOrigin();
 
     const [open, setOpen] = useState(false);
@@ -54,10 +57,10 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
     const onSubmit = async (data: SettingsFormValues) => {
         try {
             setLoading(true);
-            await axios.patch(`/api/stores/${params.storeId}`, data);
+            await axios.patch(`/api/stores/${storeId}`, data);
             router.refresh();
             toast.success("Store updated.");
-        } catch(error) {
+        } catch (error) {
             toast.error("Something went wrong")
         } finally {
             setLoading(false);
@@ -67,11 +70,11 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/stores/${params.storeId}`)
+            await axios.delete(`/api/stores/${storeId}`)
             router.refresh();
             router.push("/")
             toast.success("Store deleted.")
-        } catch(error) {
+        } catch (error) {
             toast.error("Make sure you removed all products and categories first.")
         } finally {
             setLoading(false)
@@ -80,15 +83,15 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
     }
 
     return (
-        <>  
-            <AlertModal 
+        <>
+            <AlertModal
                 isOpen={open}
                 onClose={() => setOpen(false)}
                 onConfirm={onDelete}
                 loading={loading}
             />
             <div className="flex items-center justify-between">
-                <Heading 
+                <Heading
                     title="Settings"
                     description="Manage your preferences"
                 />
@@ -98,7 +101,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                     size="sm"
                     onClick={() => setOpen(true)}
                 >
-                    <Trash className="h-4 w-4"/>
+                    <Trash className="h-4 w-4" />
                 </Button>
             </div>
             <Separator />
@@ -112,7 +115,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
-                                        <Input disabled={loading} placeholder="Store name" {...field}/>
+                                        <Input disabled={loading} placeholder="Store name" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -125,9 +128,9 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                 </form>
             </Form>
             <Separator />
-            <ApiAlert 
-                title="NEXT_PUBLIC_API_URL" 
-                description={`${origin}/api/${params.storeId}`} 
+            <ApiAlert
+                title="NEXT_PUBLIC_API_URL"
+                description={`${origin}/api/${storeId}`}
                 variant="public"
             />
         </>

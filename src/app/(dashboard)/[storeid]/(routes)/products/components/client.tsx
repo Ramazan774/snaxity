@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams, usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
@@ -18,7 +18,11 @@ interface ProductClientProps {
 
 export const ProductClient: React.FC<ProductClientProps> = ({ storeId, data }) => {
     const router = useRouter();
-    
+    const params = useParams();
+    const pathname = usePathname();
+    const pathId = pathname?.split('/')[1];
+    const id = storeId || params.storeId || pathId;
+
     return (
         <>
             <div className="flex items-center justify-between">
@@ -26,7 +30,7 @@ export const ProductClient: React.FC<ProductClientProps> = ({ storeId, data }) =
                     title={`Products (${data.length})`}
                     description="Manage products for your store"
                 />
-                <Button onClick={() => router.push(`/${storeId}/products/new`)}>
+                <Button onClick={() => router.push(`/${id}/products/new`)}>
                     <Plus className="mr-2 h-4 w-4" />
                     Add new
                 </Button>
@@ -38,7 +42,7 @@ export const ProductClient: React.FC<ProductClientProps> = ({ storeId, data }) =
                 description="API calls for Products"
             />
             <Separator />
-            <ApiList entityName="products" entityIdName="productId"/>
+            <ApiList entityName="products" entityIdName="productId" />
         </>
     );
 };

@@ -8,22 +8,22 @@ import { Trash } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, usePathname } from "next/navigation";
 
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { 
-    Form, 
-    FormControl, 
-    FormField, 
-    FormItem, 
-    FormLabel, 
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
     FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AlertModal } from "@/components/modals/alert-modal";
-    
+
 const formSchema = z.object({
     name: z.string().min(1),
     value: z.string().min(4).regex(/^#/, {
@@ -43,6 +43,9 @@ export const ColorForm: React.FC<ColorFormProps> = ({
 }) => {
     const params = useParams();
     const router = useRouter();
+    const pathname = usePathname();
+    const pathId = pathname?.split('/')[1];
+    const storeId = params.storeId || pathId;
 
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -65,15 +68,15 @@ export const ColorForm: React.FC<ColorFormProps> = ({
         try {
             setLoading(true);
             if (initialData) {
-                await axios.patch(`/api/${params.storeId}/colors/${params.colorId}`, data);
+                await axios.patch(`/api/${storeId}/colors/${params.colorId}`, data);
             } else {
-                await axios.post(`/api/${params.storeId}/colors`, data);
+                await axios.post(`/api/${storeId}/colors`, data);
             }
-            
-            router.push(`/${params.storeId}/colors`)
+
+            router.push(`/${storeId}/colors`)
             router.refresh();
             toast.success(toastMessage);
-        } catch(error) {
+        } catch (error) {
             toast.error("Something went wrong")
         } finally {
             setLoading(false);
@@ -83,11 +86,11 @@ export const ColorForm: React.FC<ColorFormProps> = ({
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/${params.storeId}/colors/${params.colorId}`)
-            router.push(`/${params.storeId}/colors`);
+            await axios.delete(`/api/${storeId}/colors/${params.colorId}`)
+            router.push(`/${storeId}/colors`);
             router.refresh();
             toast.success("Color deleted.")
-        } catch(error) {
+        } catch (error) {
             toast.error("Make sure you removed all products using this color first.")
         } finally {
             setLoading(false)
@@ -96,15 +99,15 @@ export const ColorForm: React.FC<ColorFormProps> = ({
     }
 
     return (
-        <>  
-            <AlertModal 
+        <>
+            <AlertModal
                 isOpen={open}
                 onClose={() => setOpen(false)}
                 onConfirm={onDelete}
                 loading={loading}
             />
             <div className="flex items-center justify-between">
-                <Heading 
+                <Heading
                     title={title}
                     description={description}
                 />
@@ -115,14 +118,14 @@ export const ColorForm: React.FC<ColorFormProps> = ({
                         size="sm"
                         onClick={() => setOpen(true)}
                     >
-                        <Trash className="h-4 w-4"/>
+                        <Trash className="h-4 w-4" />
                     </Button>
                 )}
             </div>
             <Separator />
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
-                    
+
                     <div className="grid grid-cols-3 gap-8">
                         <FormField
                             control={form.control}
@@ -131,7 +134,7 @@ export const ColorForm: React.FC<ColorFormProps> = ({
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
-                                        <Input disabled={loading} placeholder="Color name" {...field}/>
+                                        <Input disabled={loading} placeholder="Color name" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -145,10 +148,10 @@ export const ColorForm: React.FC<ColorFormProps> = ({
                                     <FormLabel>Value</FormLabel>
                                     <FormControl>
                                         <div className="flex items-center gap-x-4">
-                                            <Input disabled={loading} placeholder="Color value" {...field}/>
-                                            <div 
+                                            <Input disabled={loading} placeholder="Color value" {...field} />
+                                            <div
                                                 className="border p-4 rounded-full"
-                                                style={{ backgroundColor: field.value}}
+                                                style={{ backgroundColor: field.value }}
                                             />
                                         </div>
                                     </FormControl>

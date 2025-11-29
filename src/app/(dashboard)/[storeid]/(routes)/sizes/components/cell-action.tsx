@@ -1,17 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, usePathname } from "next/navigation";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 
-import { 
-    DropdownMenu, 
-    DropdownMenuContent, 
-    DropdownMenuItem, 
-    DropdownMenuLabel, 
-    DropdownMenuTrigger 
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
@@ -29,6 +29,9 @@ export const CellAction: React.FC<CellActionProps> = ({
 }) => {
     const router = useRouter();
     const params = useParams();
+    const pathname = usePathname();
+    const pathId = pathname?.split('/')[1];
+    const storeId = params.storeId || pathId;
 
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false)
@@ -41,11 +44,11 @@ export const CellAction: React.FC<CellActionProps> = ({
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/${params.storeId}/sizes/${data.id}`)
+            await axios.delete(`/api/${storeId}/sizes/${data.id}`)
             router.push("/")
             router.refresh();
             toast.success("Size deleted.")
-        } catch(error) {
+        } catch (error) {
             toast.error("Make sure you removed all products using this size first.")
         } finally {
             setLoading(false)
@@ -55,7 +58,7 @@ export const CellAction: React.FC<CellActionProps> = ({
 
     return (
         <>
-            <AlertModal 
+            <AlertModal
                 isOpen={open}
                 onClose={() => setOpen(false)}
                 onConfirm={onDelete}
@@ -73,15 +76,15 @@ export const CellAction: React.FC<CellActionProps> = ({
                         Actions
                     </DropdownMenuLabel>
                     <DropdownMenuItem onClick={() => onCopy(data.id)}>
-                        <Copy className="mr-2 h-4 w-4"/>
+                        <Copy className="mr-2 h-4 w-4" />
                         Copy Id
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push(`/${params.storeId}/sizes/${data.id}`)}>
-                        <Edit className="mr-2 h-4 w-4"/>
+                    <DropdownMenuItem onClick={() => router.push(`/${storeId}/sizes/${data.id}`)}>
+                        <Edit className="mr-2 h-4 w-4" />
                         Update
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpen(true)}>
-                        <Trash className="mr-2 h-4 w-4"/>
+                        <Trash className="mr-2 h-4 w-4" />
                         Delete
                     </DropdownMenuItem>
                 </DropdownMenuContent>
