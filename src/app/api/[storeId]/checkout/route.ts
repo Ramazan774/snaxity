@@ -70,6 +70,10 @@ export async function POST(
             }
         });
 
+        const frontendUrl = process.env.FRONTEND_STORE_URL?.startsWith("http")
+            ? process.env.FRONTEND_STORE_URL
+            : `https://${process.env.FRONTEND_STORE_URL}`;
+
         const session = await stripe.checkout.sessions.create({
             line_items,
             mode: "payment",
@@ -77,8 +81,8 @@ export async function POST(
             phone_number_collection: {
                 enabled: true
             },
-            success_url: `${process.env.FRONTEND_STORE_URL}/cart?success=1`,
-            cancel_url: `${process.env.FRONTEND_STORE_URL}/cart?canceled=1`,
+            success_url: `${frontendUrl}/cart?success=1`,
+            cancel_url: `${frontendUrl}/cart?canceled=1`,
             metadata: {
                 orderId: order.id
             }
