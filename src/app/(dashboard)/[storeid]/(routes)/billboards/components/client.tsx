@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams, usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
@@ -18,7 +18,12 @@ interface BillboardClientProps {
 
 export const BillboardClient: React.FC<BillboardClientProps> = ({ storeId, data }) => {
     const router = useRouter();
-    
+    const params = useParams();
+    const pathname = usePathname();
+
+    const pathId = pathname?.split('/')[1];
+    const id = storeId || params.storeId || pathId;
+
     return (
         <>
             <div className="flex items-center justify-between">
@@ -26,7 +31,7 @@ export const BillboardClient: React.FC<BillboardClientProps> = ({ storeId, data 
                     title={`Billboards (${data.length})`}
                     description="Manage billboards for your store"
                 />
-                <Button onClick={() => router.push(`/${storeId}/billboards/new`)}>
+                <Button onClick={() => router.push(`/${id}/billboards/new`)}>
                     <Plus className="mr-2 h-4 w-4" />
                     Add new
                 </Button>
@@ -38,7 +43,7 @@ export const BillboardClient: React.FC<BillboardClientProps> = ({ storeId, data 
                 description="API calls for Billboards"
             />
             <Separator />
-            <ApiList entityName="billboards" entityIdName="billboardId"/>
+            <ApiList entityName="billboards" entityIdName="billboardId" />
         </>
     );
 };
