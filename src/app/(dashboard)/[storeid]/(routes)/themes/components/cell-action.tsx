@@ -15,12 +15,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-import { ColorColumn } from "./columns";
+import { ThemeColumn } from "./columns";
 import { AlertModal } from "@/components/modals/alert-modal";
 
 
 interface CellActionProps {
-    data: ColorColumn
+    data: ThemeColumn
 };
 
 
@@ -38,18 +38,18 @@ export const CellAction: React.FC<CellActionProps> = ({
 
     const onCopy = (id: string) => {
         navigator.clipboard.writeText(id)
-        toast.success("Color id copied to clipboard.")
+        toast.success("Theme id copied to clipboard.")
     };
 
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/${storeId}/colors/${data.id}`)
+            await axios.delete(`/api/${storeId}/themes/${data.id}`)
             router.push("/")
             router.refresh();
-            toast.success("Color deleted.")
+            toast.success("Theme deleted.")
         } catch (error) {
-            toast.error("Make sure you removed all products using this color first.")
+            toast.error("Make sure you removed all products using this theme first.")
         } finally {
             setLoading(false)
             setOpen(false)
@@ -79,7 +79,7 @@ export const CellAction: React.FC<CellActionProps> = ({
                         <Copy className="mr-2 h-4 w-4" />
                         Copy Id
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push(`/${storeId}/colors/${data.id}`)}>
+                    <DropdownMenuItem onClick={() => router.push(`/${storeId}/themes/${data.id}`)}>
                         <Edit className="mr-2 h-4 w-4" />
                         Update
                     </DropdownMenuItem>

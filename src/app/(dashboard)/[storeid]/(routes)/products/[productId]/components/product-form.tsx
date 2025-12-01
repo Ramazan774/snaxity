@@ -3,7 +3,7 @@
 import * as z from "zod"
 import axios from "axios";
 import { useState } from "react";
-import { Category, Color, Image, Product, Size } from "@prisma/client";
+import { Category, Theme, Image, Product, Size } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -39,7 +39,7 @@ const formSchema = z.object({
     images: z.object({ url: z.string() }).array(),
     price: z.coerce.number().min(1),
     categoryId: z.string().min(1),
-    colorId: z.string().min(1),
+    themeId: z.string().min(1),
     sizeId: z.string().min(1),
     isFeatured: z.boolean().default(false).optional(),
     isArchived: z.boolean().default(false).optional()
@@ -53,14 +53,14 @@ interface ProductFormProps {
         images: Image[]
     } | null;
     categories: Category[]
-    colors: Color[]
+    themes: Theme[]
     sizes: Size[]
 }
 
 export const ProductForm: React.FC<ProductFormProps> = ({
     initialData,
     categories,
-    colors,
+    themes,
     sizes
 }) => {
     const params = useParams();
@@ -88,7 +88,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             images: [],
             price: 0,
             categoryId: '',
-            colorId: '',
+            themeId: '',
             sizeId: '',
             isFeatured: false,
             isArchived: false
@@ -273,10 +273,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                         />
                         <FormField
                             control={form.control}
-                            name="colorId"
+                            name="themeId"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Color</FormLabel>
+                                    <FormLabel>Theme</FormLabel>
                                     <Select
                                         disabled={loading}
                                         onValueChange={field.onChange}
@@ -287,17 +287,17 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                                             <SelectTrigger>
                                                 <SelectValue
                                                     defaultValue={field.value}
-                                                    placeholder="Select a color"
+                                                    placeholder="Select a theme"
                                                 />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            {colors.map((color) => (
+                                            {themes.map((theme) => (
                                                 <SelectItem
-                                                    key={color.id}
-                                                    value={color.id}
+                                                    key={theme.id}
+                                                    value={theme.id}
                                                 >
-                                                    {color.name}
+                                                    {theme.name}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>

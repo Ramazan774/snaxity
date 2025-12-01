@@ -3,7 +3,7 @@
 import * as z from "zod"
 import axios from "axios";
 import { useState } from "react";
-import { Color } from "@prisma/client";
+import { Theme } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -32,13 +32,13 @@ const formSchema = z.object({
 });
 
 
-type ColorFormValues = z.infer<typeof formSchema>;
+type ThemeFormValues = z.infer<typeof formSchema>;
 
-interface ColorFormProps {
-    initialData: Color | null;
+interface ThemeFormProps {
+    initialData: Theme | null;
 }
 
-export const ColorForm: React.FC<ColorFormProps> = ({
+export const ThemeForm: React.FC<ThemeFormProps> = ({
     initialData,
 }) => {
     const params = useParams();
@@ -50,13 +50,13 @@ export const ColorForm: React.FC<ColorFormProps> = ({
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const title = initialData ? "Edit color" : "Create color"
-    const description = initialData ? "Edit a color" : "Add a new color"
-    const toastMessage = initialData ? "Color updated" : "Color created"
+    const title = initialData ? "Edit theme" : "Create theme"
+    const description = initialData ? "Edit a theme" : "Add a new theme"
+    const toastMessage = initialData ? "Theme updated" : "Theme created"
     const action = initialData ? "Save changes" : "Create"
 
 
-    const form = useForm<ColorFormValues>({
+    const form = useForm<ThemeFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: initialData || {
             name: '',
@@ -64,16 +64,16 @@ export const ColorForm: React.FC<ColorFormProps> = ({
         }
     })
 
-    const onSubmit = async (data: ColorFormValues) => {
+    const onSubmit = async (data: ThemeFormValues) => {
         try {
             setLoading(true);
             if (initialData) {
-                await axios.patch(`/api/${storeId}/colors/${params.colorId}`, data);
+                await axios.patch(`/api/${storeId}/themes/${params.themeId}`, data);
             } else {
-                await axios.post(`/api/${storeId}/colors`, data);
+                await axios.post(`/api/${storeId}/themes`, data);
             }
 
-            router.push(`/${storeId}/colors`)
+            router.push(`/${storeId}/themes`)
             router.refresh();
             toast.success(toastMessage);
         } catch (error) {
@@ -86,12 +86,12 @@ export const ColorForm: React.FC<ColorFormProps> = ({
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/${storeId}/colors/${params.colorId}`)
-            router.push(`/${storeId}/colors`);
+            await axios.delete(`/api/${storeId}/themes/${params.themeId}`)
+            router.push(`/${storeId}/themes`);
             router.refresh();
-            toast.success("Color deleted.")
+            toast.success("Theme deleted.")
         } catch (error) {
-            toast.error("Make sure you removed all products using this color first.")
+            toast.error("Make sure you removed all products using this theme first.")
         } finally {
             setLoading(false)
             setOpen(false)
@@ -134,7 +134,7 @@ export const ColorForm: React.FC<ColorFormProps> = ({
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
-                                        <Input disabled={loading} placeholder="Color name" {...field} />
+                                        <Input disabled={loading} placeholder="Theme name" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -148,7 +148,7 @@ export const ColorForm: React.FC<ColorFormProps> = ({
                                     <FormLabel>Value</FormLabel>
                                     <FormControl>
                                         <div className="flex items-center gap-x-4">
-                                            <Input disabled={loading} placeholder="Color value" {...field} />
+                                            <Input disabled={loading} placeholder="Theme value" {...field} />
                                             <div
                                                 className="border p-4 rounded-full"
                                                 style={{ backgroundColor: field.value }}

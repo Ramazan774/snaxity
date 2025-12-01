@@ -2,17 +2,17 @@ import { format } from "date-fns";
 
 import prismadb from '@/lib/prismadb';
 
-import { ColorClient } from './components/client';
-import { ColorColumn } from './components/columns';
+import { ThemeClient } from './components/client';
+import { ThemeColumn } from './components/columns';
 
-interface BillboardsPageProps {
+interface ThemesPageProps {
     params: {
         storeId: string;
     };
 }
 
-const ColorsPage = async ({ params }: BillboardsPageProps) => {
-    const colors = await prismadb.color.findMany({
+const ThemesPage = async ({ params }: ThemesPageProps) => {
+    const themes = await prismadb.theme.findMany({
         where: {
             storeId: params.storeId
         },
@@ -21,7 +21,7 @@ const ColorsPage = async ({ params }: BillboardsPageProps) => {
         }
     });
 
-    const formattedColors: ColorColumn[] = colors.map((item) => ({
+    const formattedThemes: ThemeColumn[] = themes.map((item) => ({
         id: item.id,
         name: item.name,
         value: item.value,
@@ -31,10 +31,10 @@ const ColorsPage = async ({ params }: BillboardsPageProps) => {
     return (
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-6">
-                <ColorClient storeId={params.storeId} data={formattedColors} />
+                <ThemeClient storeId={params.storeId} data={formattedThemes} />
             </div>
         </div>
     );
 };
 
-export default ColorsPage;
+export default ThemesPage;

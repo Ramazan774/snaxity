@@ -9,14 +9,14 @@ import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/ui/data-table";
 import { ApiList } from "@/components/ui/api-list";
 
-import { ColorColumn, columns } from "./columns";
+import { ThemeColumn, columns } from "./columns";
 
-interface ColorClientProps {
+interface ThemeClientProps {
     storeId: string;
-    data: ColorColumn[];
+    data: ThemeColumn[];
 }
 
-export const ColorClient: React.FC<ColorClientProps> = ({ storeId, data }) => {
+export const ThemeClient: React.FC<ThemeClientProps> = ({ storeId, data }) => {
     const router = useRouter();
     const params = useParams();
     const pathname = usePathname();
@@ -27,10 +27,10 @@ export const ColorClient: React.FC<ColorClientProps> = ({ storeId, data }) => {
         <>
             <div className="flex items-center justify-between">
                 <Heading
-                    title={`Colors (${data.length})`}
-                    description="Manage colors for your store"
+                    title={`Themes (${data.length})`}
+                    description="Manage themes for your store"
                 />
-                <Button onClick={() => router.push(`/${id}/colors/new`)}>
+                <Button onClick={() => router.push(`/${id}/themes/new`)}>
                     <Plus className="mr-2 h-4 w-4" />
                     Add new
                 </Button>
@@ -39,10 +39,10 @@ export const ColorClient: React.FC<ColorClientProps> = ({ storeId, data }) => {
             <DataTable searchKey="name" columns={columns} data={data} />
             <Heading
                 title="API"
-                description="API calls for Colors"
+                description="API calls for Themes"
             />
             <Separator />
-            <ApiList entityName="colors" entityIdName="colorId" />
+            <ApiList entityName="themes" entityIdName="themeId" />
         </>
     );
 };
